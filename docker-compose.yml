@@ -1,11 +1,19 @@
 # Kraxia — déploiement Dokploy / Coolify / docker compose
 #
 # Architecture multi-tenant :
-#   frontend (public:3000) ──► gateway (FastAPI, port $PORT)
-#                                    │
-#                                    ├──► postgres (interne)
-#                                    └──► spawn de conteneurs utilisateur à la volée
-#                                         via le socket Docker monté côté hôte
+#   Internet ──(domaine, Traefik/dokploy-network)──► frontend (nginx, port interne 3000)
+#                                                          │
+#                                                          ├──► gateway (FastAPI, port interne $PORT, réseau docker only)
+#                                                          │        │
+#                                                          │        ├──► postgres (interne)
+#                                                          │        └──► spawn de conteneurs utilisateur à la volée
+#                                                          │             via le socket Docker monté côté hôte
+#
+# Aucun port n'est publié directement sur l'hôte (pas de "ports:") : tous les
+# services communiquent uniquement via les réseaux Docker internes
+# (kraxia-internal / kraxia-external), et seul le frontend est routé vers
+# l'extérieur via un nom de domaine (dokploy-network + Traefik, configuré
+# dans l'onglet Domains de Dokploy — voir README section Déploiement).
 #
 # Dokploy / Coolify reconnaissent ce fichier et provisionnent automatiquement
 # les services, réseaux, volumes et healthchecks.
@@ -37,8 +45,8 @@ services:
       context: .
       dockerfile: platform/Dockerfile
     restart: unless-stopped
-    ports:
-      - "${GATEWAY_PORT:-8080}:${PORT:-8080}"
+    expose:
+      - "${PORT:-8080}"
     environment:
       PLATFORM_DATABASE_URL: postgresql+asyncpg://${POSTGRES_USER:-kraxia}:${POSTGRES_PASSWORD:-kraxia}@postgres:5432/${POSTGRES_DB:-kraxia_platform}
       PLATFORM_JWT_SECRET: ${JWT_SECRET:?JWT_SECRET requis en production}
@@ -83,10 +91,11 @@ services:
       args:
         VITE_API_URL: ${VITE_API_URL:-}
     restart: unless-stopped
-    ports:
-      - "${FRONTEND_PORT:-3000}:${PORT:-3000}"
+    expose:
+      - "3000"
     networks:
       - kraxia-external
+      - dokploy-network
     depends_on:
       - gateway
 
@@ -97,6 +106,8 @@ networks:
   kraxia-external:
     name: kraxia-external
     driver: bridge
+  dokploy-network:
+    external: true
 
 volumes:
   kraxia_pgdata:

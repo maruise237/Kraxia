@@ -9,7 +9,7 @@ import {
   X,
   RefreshCw,
   MessageSquare,
-  Utilisateur,
+  User as Utilisateur,
   Bot,
 } from 'lucide-react'
 

@@ -107,7 +107,7 @@ export default function TopBar() {
           borderColor: 'border-yellow-500/30',
           textColor: 'text-yellow-500',
           dotColor: 'bg-yellow-500',
-          text: 'Service en cours d'initialisation',
+          text: "Service en cours d'initialisation",
         }
       case 'online':
         return {

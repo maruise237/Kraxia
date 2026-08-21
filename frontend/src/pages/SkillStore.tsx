@@ -75,7 +75,7 @@ export default function SkillStore() {
       setRecInstalled(prev => new Set(prev).add(skillName))
       refreshCompétences()
     } catch (err: any) {
-      setInstallError(err?.message || 'Échec de l'installation')
+      setInstallError(err?.message || "Échec de l'installation")
     } finally {
       setRecInstalling(null)
     }
@@ -112,7 +112,7 @@ export default function SkillStore() {
       setInstalled(prev => new Set(prev).add(slug))
       refreshCompétences()
     } catch (err: any) {
-      setInstallError(err?.message || 'Échec de l'installation')
+      setInstallError(err?.message || "Échec de l'installation")
     } finally {
       setInstalling(null)
     }
@@ -240,7 +240,7 @@ export default function SkillStore() {
         setGitError(result.errors.join('; '))
       }
     } catch (err: any) {
-      setGitError(err?.message || 'Échec de l'installation')
+      setGitError(err?.message || "Échec de l'installation")
     } finally {
       setGitInstalling(false)
     }

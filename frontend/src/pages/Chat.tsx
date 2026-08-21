@@ -8,7 +8,7 @@ import {
   Pencil,
   MessageSquare,
   Bot,
-  Utilisateur,
+  User as Utilisateur,
   RefreshCw,
   ChevronRight,
   Paperclip,

@@ -16,7 +16,7 @@ import {
   Monitor,
   Code2,
   Settings,
-  Utilisateur,
+  User as Utilisateur,
   Puzzle,
   KeyRound,
   LogOut,

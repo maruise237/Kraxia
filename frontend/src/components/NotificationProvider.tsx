@@ -54,7 +54,7 @@ function getCurrentChatSession(location: ReturnType<typeof useLocation>): string
 
 function summarize(text: string): string {
   const normalized = text.replace(/\s+/g, ' ').trim()
-  if (!normalized) return 'L'assistant a répondu'
+  if (!normalized) return "L'assistant a répondu"
   return normalized.length > 80 ? `${normalized.slice(0, 80)}...` : normalized
 }
 

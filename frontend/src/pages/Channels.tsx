@@ -260,7 +260,7 @@ const CHANNEL_CONFIG_FIELDS: Record<string, ChannelField[]> = {
     { key: 'port', label: '', type: 'number', hint: 'TLS  6697， TLS  6667' },
     { key: 'tls', label: ' TLS', type: 'boolean' },
     { key: 'nick', label: '', type: 'text', required: true, hint: 'Bot  IRC ' },
-    { key: 'username', label: 'Nom d'utilisateur', type: 'text', hint: 'IRC USER Nom d'utilisateur' },
+    { key: 'username', label: "Nom d'utilisateur", type: 'text', hint: "IRC USER Nom d'utilisateur" },
     { key: 'password', label: 'Mot de passe', type: 'password' },
     { key: 'channels', label: '', type: 'text', hint: '， #general,#bot' },
     { key: 'enabled', label: 'Activer', type: 'boolean' },
@@ -283,7 +283,7 @@ const CHANNEL_CONFIG_FIELDS: Record<string, ChannelField[]> = {
     { key: 'groupPolicy', label: '', type: 'select', options: GROUP_POLICY_OPTIONS },
   ],
   twitch: [
-    { key: 'username', label: 'Nom d'utilisateur', type: 'text', required: true, hint: 'Twitch Nom d'utilisateur' },
+    { key: 'username', label: "Nom d'utilisateur", type: 'text', required: true, hint: "Twitch Nom d'utilisateur" },
     { key: 'accessToken', label: 'Access Token', type: 'password', required: true, hint: 'OAuth Access Token' },
     { key: 'clientId', label: 'Client ID', type: 'text', required: true, hint: 'Twitch App Client ID' },
     { key: 'clientSecret', label: 'Client Secret', type: 'password', hint: 'Token Actualiser' },
@@ -295,7 +295,7 @@ const CHANNEL_CONFIG_FIELDS: Record<string, ChannelField[]> = {
   'nextcloud-talk': [
     { key: 'baseUrl', label: 'Nextcloud URL', type: 'text', required: true, hint: ' https://cloud.example.com' },
     { key: 'botSecret', label: 'Bot Secret', type: 'password', required: true, hint: 'Bot Shared Secret' },
-    { key: 'apiUtilisateur', label: 'API Utilisateur', type: 'text', hint: ' salon Nom d'utilisateur' },
+    { key: 'apiUtilisateur', label: 'API Utilisateur', type: 'text', hint: " salon Nom d'utilisateur" },
     { key: 'apiPassword', label: 'API Mot de passe', type: 'password', hint: 'API UtilisateurMot de passe' },
     { key: 'enabled', label: 'Activer', type: 'boolean' },
     { key: 'dmPolicy', label: '', type: 'select', options: DM_POLICY_OPTIONS },

@@ -73,7 +73,7 @@ export default function CronJobs() {
       // Refresh to get updated last_run info
       await fetchJobs()
     } catch (err: any) {
-      setError(err?.message || 'Échec de l'exécution')
+      setError(err?.message || "Échec de l'exécution")
     } finally {
       setRunningId(null)
     }

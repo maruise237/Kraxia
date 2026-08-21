@@ -55,7 +55,7 @@ function toolResultSummary(content: string): { status: 'success' | 'error' | 'ne
         const output = (parsed.output || '').trim()
         return { status: 'success', summary: output ? output.split('\n')[0].slice(0, 80) : '' }
       }
-      const errMsg = (parsed.error || parsed.output || '').trim().split('\n').pop()?.slice(0, 80) || 'Échec de l'exécution'
+      const errMsg = (parsed.error || parsed.output || '').trim().split('\n').pop()?.slice(0, 80) || "Échec de l'exécution"
       return { status: 'error', summary: errMsg }
     }
     // view_file result

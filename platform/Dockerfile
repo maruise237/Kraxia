@@ -37,7 +37,7 @@ COPY deploy_copy/ deploy_copy/
 
 # Healthcheck pour Dokploy/Coolify
 HEALTHCHECK --interval=30s --timeout=5s --start-period=20s --retries=3 \
-    CMD curl -fsS http://127.0.0.1:${PORT}/api/health || exit 1
+    CMD curl -fsS http://127.0.0.1:${PORT}/api/ping || exit 1
 
 # Démarrage : migrations Alembic → FastAPI sur $PORT
 CMD ["sh", "-c", "alembic upgrade head 2>&1 || true; uvicorn app.main:app --host 0.0.0.0 --port ${PORT} --proxy-headers"]

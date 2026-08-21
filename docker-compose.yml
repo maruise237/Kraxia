@@ -11,9 +11,15 @@
 #
 # Aucun port n'est publié directement sur l'hôte (pas de "ports:") : tous les
 # services communiquent uniquement via les réseaux Docker internes
-# (kraxia-internal / kraxia-external), et seul le frontend est routé vers
-# l'extérieur via un nom de domaine (dokploy-network + Traefik, configuré
-# dans l'onglet Domains de Dokploy — voir README section Déploiement).
+# (kraxia-internal), et seul le frontend est routé vers l'extérieur via un
+# nom de domaine (dokploy-network + Traefik, configuré dans l'onglet Domains
+# de Dokploy — voir README section Déploiement).
+#
+# Important : gateway et frontend sont volontairement rattachés à EXACTEMENT
+# le même jeu de réseaux (kraxia-internal + dokploy-network). Avoir des
+# réseaux asymétriques entre deux services qui doivent se parler a causé un
+# bug de routage réel ("Host is unreachable") lors d'une itération précédente
+# — ne pas réintroduire cette asymétrie sans tester en conditions réelles.
 #
 # Dokploy / Coolify reconnaissent ce fichier et provisionnent automatiquement
 # les services, réseaux, volumes et healthchecks.
@@ -79,7 +85,6 @@ services:
       - kraxia_traces:/app/.hermes/training_traces
     networks:
       - kraxia-internal
-      - kraxia-external
       - dokploy-network
     depends_on:
       postgres:
@@ -96,7 +101,7 @@ services:
     expose:
       - "3000"
     networks:
-      - kraxia-external
+      - kraxia-internal
       - dokploy-network
     depends_on:
       - gateway
@@ -104,9 +109,6 @@ services:
 networks:
   kraxia-internal:
     name: kraxia-internal
-    driver: bridge
-  kraxia-external:
-    name: kraxia-external
     driver: bridge
   dokploy-network:
     external: true

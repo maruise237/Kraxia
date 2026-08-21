@@ -1,0 +1,25 @@
+# Builds / artefacts
+node_modules/
+**/node_modules/
+**/__pycache__/
+**/*.pyc
+**/*.pyo
+
+# Secrets et stockage
+.env
+.env.local
+.hermes/
+.deploy/
+
+# OS / éditeur
+.DS_Store
+.vscode/
+.idea/
+*.swp
+
+# Logs
+*.log
+
+# Volumes Dokploy/Coolify
+.pgdata/
+.traces/

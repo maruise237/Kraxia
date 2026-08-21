@@ -34,8 +34,8 @@ services:
   gateway:
     container_name: kraxia-gateway
     build:
-      context: ./platform
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: platform/Dockerfile
     restart: unless-stopped
     ports:
       - "${GATEWAY_PORT:-8080}:${PORT:-8080}"

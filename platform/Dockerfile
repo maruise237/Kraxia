@@ -24,15 +24,15 @@ RUN sed -i \
 RUN pip install --no-cache-dir -i ${PIP_INDEX_URL} uv
 
 # Manifests Python
-COPY pyproject.toml ./
+COPY platform/pyproject.toml ./
 
 # Installation des dépendances (cache Docker préservé)
 RUN uv pip install --system --no-cache -r pyproject.toml
 
 # Code applicatif
-COPY app/ app/
-COPY alembic/ alembic/
-COPY alembic.ini ./
+COPY platform/app/ app/
+COPY platform/alembic/ alembic/
+COPY platform/alembic.ini ./
 COPY deploy_copy/ deploy_copy/
 
 # Healthcheck pour Dokploy/Coolify

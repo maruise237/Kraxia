@@ -295,7 +295,7 @@ def test_write_runtime_files_preserves_user_provider(monkeypatch):
         },
     }
     monkeypatch.setattr(mgr, "_build_hermes_config_yaml", lambda: __import__("yaml").safe_dump(platform_config))
-    monkeypatch.setattr(mgr, "_build_hermes_env_file", lambda: "")
+    monkeypatch.setattr(mgr, "_build_hermes_env_file", lambda *args, **kwargs: "")
 
     existing_config = {
         "model": {"provider": "deepseek", "default": "deepseek-chat"},
@@ -345,7 +345,7 @@ def test_write_runtime_files_keeps_platform_gateway_when_no_user_provider(monkey
         },
     }
     monkeypatch.setattr(mgr, "_build_hermes_config_yaml", lambda: __import__("yaml").safe_dump(platform_config))
-    monkeypatch.setattr(mgr, "_build_hermes_env_file", lambda: "")
+    monkeypatch.setattr(mgr, "_build_hermes_env_file", lambda *args, **kwargs: "")
 
     existing_config = {
         "model": {"provider": "platform-gateway", "default": "hermes-agent"},

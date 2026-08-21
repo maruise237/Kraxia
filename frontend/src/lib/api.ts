@@ -171,7 +171,9 @@ async function parseErrorMessage(res: Response): Promise<string> {
       const data = JSON.parse(body) as { detail?: string; message?: string }
       return data.detail || data.message || `Échec de la requête (${res.status})`
     } catch {
-      return body || `Échec de la requête (${res.status})`
+      // Le corps n'est pas du JSON (ex: page d'erreur HTML renvoyée par nginx/
+      // le reverse proxy en cas de 502/503/504) : ne jamais l'afficher tel quel.
+      return `Le serveur est momentanément indisponible (${res.status}). Réessaie dans un instant.`
     }
   } catch {
     return `Échec de la requête (${res.status})`

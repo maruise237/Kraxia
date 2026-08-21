@@ -73,6 +73,7 @@ services:
       PLATFORM_CONTAINER_TZ: ${CONTAINER_TZ:-UTC}
       PLATFORM_CONTAINER_MEMORY_LIMIT: ${PLATFORM_CONTAINER_MEMORY_LIMIT:-2g}
       PLATFORM_TRAINING_TRACE_ENABLED: ${PLATFORM_TRAINING_TRACE_ENABLED:-false}
+      PLATFORM_CONTAINER_NETWORK: kraxia-internal
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock  # création de conteneurs utilisateur
       - kraxia_traces:/app/.hermes/training_traces

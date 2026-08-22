@@ -10,16 +10,19 @@
 #                                                          │             via le socket Docker monté côté hôte
 #
 # Aucun port n'est publié directement sur l'hôte (pas de "ports:") : tous les
-# services communiquent uniquement via les réseaux Docker internes
-# (kraxia-internal), et seul le frontend est routé vers l'extérieur via un
+# services communiquent uniquement via un réseau Docker interne unique
+# (kraxia-net), et seul le frontend est en plus routé vers l'extérieur via un
 # nom de domaine (dokploy-network + Traefik, configuré dans l'onglet Domains
 # de Dokploy — voir README section Déploiement).
 #
-# Important : gateway et frontend sont volontairement rattachés à EXACTEMENT
-# le même jeu de réseaux (kraxia-internal + dokploy-network). Avoir des
-# réseaux asymétriques entre deux services qui doivent se parler a causé un
-# bug de routage réel ("Host is unreachable") lors d'une itération précédente
-# — ne pas réintroduire cette asymétrie sans tester en conditions réelles.
+# Historique : deux itérations précédentes (kraxia-internal + kraxia-external,
+# puis kraxia-internal seul + dokploy-network sur gateway ET frontend) ont
+# échoué avec "connect() failed (113: Host is unreachable)" entre frontend et
+# gateway, malgré une topologie symétrique. Cette version simplifie au
+# maximum : un seul réseau interne, gateway N'A PAS besoin de dokploy-network
+# (il n'est jamais routé vers l'extérieur, inutile de le lui donner), et le
+# nom de réseau est renouvelé (kraxia-net, plus kraxia-internal/-external)
+# pour écarter tout état réseau Docker périmé lié aux anciens noms.
 #
 # Dokploy / Coolify reconnaissent ce fichier et provisionnent automatiquement
 # les services, réseaux, volumes et healthchecks.
@@ -38,7 +41,7 @@ services:
     volumes:
       - kraxia_pgdata:/var/lib/postgresql/data
     networks:
-      - kraxia-internal
+      - kraxia-net
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-kraxia} -d ${POSTGRES_DB:-kraxia_platform}"]
       interval: 5s
@@ -79,13 +82,12 @@ services:
       PLATFORM_CONTAINER_TZ: ${CONTAINER_TZ:-UTC}
       PLATFORM_CONTAINER_MEMORY_LIMIT: ${PLATFORM_CONTAINER_MEMORY_LIMIT:-2g}
       PLATFORM_TRAINING_TRACE_ENABLED: ${PLATFORM_TRAINING_TRACE_ENABLED:-false}
-      PLATFORM_CONTAINER_NETWORK: kraxia-internal
+      PLATFORM_CONTAINER_NETWORK: kraxia-net
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock  # création de conteneurs utilisateur
       - kraxia_traces:/app/.hermes/training_traces
     networks:
-      - kraxia-internal
-      - dokploy-network
+      - kraxia-net
     depends_on:
       postgres:
         condition: service_healthy
@@ -101,14 +103,14 @@ services:
     expose:
       - "3000"
     networks:
-      - kraxia-internal
+      - kraxia-net
       - dokploy-network
     depends_on:
       - gateway
 
 networks:
-  kraxia-internal:
-    name: kraxia-internal
+  kraxia-net:
+    name: kraxia-net
     driver: bridge
   dokploy-network:
     external: true

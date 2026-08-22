@@ -1,13 +1,30 @@
 """Platform gateway configuration."""
 
+from urllib.parse import quote_plus
+
 from pydantic_settings import BaseSettings
 
 
 class Settings(BaseSettings):
     """Platform configuration loaded from environment variables."""
 
-    # Database
-    database_url: str = "postgresql+asyncpg://nanobot:nanobot@localhost:5432/nanobot_platform"
+    # Database — composants bruts plutôt qu'une URL déjà assemblée : si le
+    # mot de passe contient un caractère réservé dans une URI (@ : / ? # %),
+    # une URL pré-construite par simple concaténation (ex. dans un
+    # docker-compose.yml) devient ambiguë et urlparse() extrait le mauvais
+    # mot de passe. On échappe nous-mêmes user/password avec quote_plus()
+    # dans la propriété database_url ci-dessous, quelle que soit la valeur.
+    db_user: str = "nanobot"
+    db_password: str = "nanobot"
+    db_host: str = "localhost"
+    db_port: str = "5432"
+    db_name: str = "nanobot_platform"
+
+    @property
+    def database_url(self) -> str:
+        user = quote_plus(self.db_user)
+        password = quote_plus(self.db_password)
+        return f"postgresql+asyncpg://{user}:{password}@{self.db_host}:{self.db_port}/{self.db_name}"
 
     # JWT
     jwt_secret: str = "change-me-in-production"

@@ -57,7 +57,14 @@ services:
     expose:
       - "${PORT:-8080}"
     environment:
-      PLATFORM_DATABASE_URL: postgresql+asyncpg://${POSTGRES_USER:-kraxia}:${POSTGRES_PASSWORD:-kraxia}@postgres:5432/${POSTGRES_DB:-kraxia_platform}
+      # Composants séparés (pas une URL pré-assemblée) : le mot de passe est
+      # échappé côté Python (urllib.parse.quote_plus) dans app/config.py,
+      # donc aucun caractère spécial (@ : / ? # %) ne peut casser le parsing.
+      PLATFORM_DB_USER: ${POSTGRES_USER:-kraxia}
+      PLATFORM_DB_PASSWORD: ${POSTGRES_PASSWORD:-kraxia}
+      PLATFORM_DB_HOST: postgres
+      PLATFORM_DB_PORT: "5432"
+      PLATFORM_DB_NAME: ${POSTGRES_DB:-kraxia_platform}
       PLATFORM_JWT_SECRET: ${JWT_SECRET:?JWT_SECRET requis en production}
       PLATFORM_ADMIN_USERNAME: ${ADMIN_USERNAME:-admin}
       PLATFORM_ADMIN_PASSWORD: ${ADMIN_PASSWORD:?ADMIN_PASSWORD requis}
